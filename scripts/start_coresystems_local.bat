@@ -2,7 +2,7 @@
 
 REM Gatekeeper and Gateway are not started for local clouds
 
-SET version="4.4.0"
+SET version="4.4.1"
 SET parent_path=%~dp0
 cd %parent_path%
 
