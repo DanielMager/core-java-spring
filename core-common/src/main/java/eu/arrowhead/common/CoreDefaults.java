@@ -96,7 +96,10 @@ public class CoreDefaults {
 	public static final String DEFAULT_QOS_MONITOR_PROVIDER_PATH = "/ping-icmp";
 	public static final boolean DEFAULT_QOS_MONITOR_PROVIDER_SECURE = true;
 
-	public static final int DEFAULT_RELAY_TEST_BAD_GATEWAY_RETRY_MIN = 30; //in minutes
+	public static final boolean DEFAULT_EXTENDED_QOS_ENABLED = false;
+	public static final String DEFAULT_EVALUATOR_PLUGIN_DIR = "evaluators";
+
+	public static final int DEFAULT_RELAY_TEST_BAD_GATEWAY_RETRY_MIN = 30; // in minutes
 	public static final byte DEFAULT_RELAY_TEST_TIME_TO_REPEAT = 35;
 	public static final int DEFAULT_RELAY_TEST_TIMEOUT = 5000; // in milliseconds
 	public static final int DEFAULT_RELAY_TEST_MESSAGE_SIZE = 2048; // in bytes

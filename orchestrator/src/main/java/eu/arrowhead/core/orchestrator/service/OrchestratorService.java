@@ -64,6 +64,7 @@ import eu.arrowhead.common.dto.shared.OrchestrationResultDTO;
 import eu.arrowhead.common.dto.shared.OrchestratorWarnings;
 import eu.arrowhead.common.dto.shared.PreferredProviderDataDTO;
 import eu.arrowhead.common.dto.shared.QoSMeasurementAttributesFormDTO;
+import eu.arrowhead.common.dto.shared.QoSPolicyResponseDTO;
 import eu.arrowhead.common.dto.shared.ServiceInterfaceResponseDTO;
 import eu.arrowhead.common.dto.shared.ServiceQueryFormDTO;
 import eu.arrowhead.common.dto.shared.ServiceQueryResultDTO;
@@ -71,6 +72,9 @@ import eu.arrowhead.common.dto.shared.ServiceRegistryResponseDTO;
 import eu.arrowhead.common.dto.shared.SystemRequestDTO;
 import eu.arrowhead.common.dto.shared.SystemResponseDTO;
 import eu.arrowhead.common.exception.InvalidParameterException;
+import eu.arrowhead.core.extendedQos.database.ExtendedQoSDBService;
+import eu.arrowhead.core.extendedQos.evaluator.QoSEvaluator;
+import eu.arrowhead.core.extendedQos.evaluator.QoSEvaluatorLoader;
 import eu.arrowhead.core.orchestrator.database.service.OrchestratorStoreDBService;
 import eu.arrowhead.core.orchestrator.matchmaking.CloudMatchmakingAlgorithm;
 import eu.arrowhead.core.orchestrator.matchmaking.CloudMatchmakingParameters;
@@ -104,7 +108,13 @@ public class OrchestratorService {
 	
 	@Autowired
 	private OrchestratorStoreDBService orchestratorStoreDBService;
-	
+
+	@Autowired
+	private ExtendedQoSDBService extendedQoSDBService;
+
+	@Autowired
+	private QoSEvaluatorLoader evaluatorLoader;
+
 	@Resource(name = CoreCommonConstants.INTRA_CLOUD_PROVIDER_MATCHMAKER)
 	private IntraCloudProviderMatchmakingAlgorithm intraCloudProviderMatchmaker;
 	
@@ -128,7 +138,10 @@ public class OrchestratorService {
 	
 	@Value(CoreCommonConstants.$QOS_MAX_RESERVATION_DURATION_WD)
 	private int maxReservationDuration; // in seconds
-	
+
+	@Value(CoreCommonConstants.$EXTENDED_QOS_ENABLED_WD)
+	private boolean extendedQosEnabled;
+
 	//=================================================================================================
 	// methods
 
@@ -426,8 +439,58 @@ public class OrchestratorService {
 				}
 			}
 		}
-		
-		// If matchmaking is requested, we pick out 1 ServiceRegistryEntry entity from the list.
+
+		if (extendedQosEnabled) {
+			logger.debug("Extended QoS is enabled");
+			
+			String policyChosen = request.getQosRequirements().get("qosPolicy");
+			logger.debug("Found policy {} in request parameters", policyChosen);
+			QoSPolicyResponseDTO policy = new QoSPolicyResponseDTO();
+			if (policyChosen != null) {
+				policy = extendedQoSDBService.getPolicy(policyChosen);
+			} else {
+				logger.debug("No QoS policy chosen, checking for default policies...");
+
+				SystemRequestDTO requesterSystem = request.getRequesterSystem();
+				policy = extendedQoSDBService.getSystemDefaultPolicy(requesterSystem.getSystemName(),
+						requesterSystem.getAddress(), requesterSystem.getPort());
+				if (policy.getId() != 0) {
+					logger.debug("Found system default QoS policy {} - id: {}", policy.getName(), policy.getId());
+				} else {
+					logger.debug("No system default QoS policy set, checking for global default QoS policy...");
+					
+					policy = extendedQoSDBService.getGlobalDefaultPolicy();
+					if (policy.getId() != 0) {
+						logger.debug("Found global default QoS policy {} - id: {}", policy.getName(), policy.getId());
+					} else {
+						logger.debug("No global default QoS policy set, continuing orchestration...");
+					}
+				}
+			}
+
+			if (policy.getId() != 0) {
+				QoSEvaluator policyEvaluator = evaluatorLoader.getEvaluatorByName(policy.getEvaluator());
+				if (policyEvaluator != null) {
+					Map<String, String> parameters = policy.getParameters();
+					Map<String, String> customParameters = request.getQosRequirements().entrySet().stream()
+							.filter(entry -> !entry.getKey().equals("qosPolicy"))
+							.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+					parameters.putAll(customParameters);
+
+					logger.debug("Evaluator parameters: {}", parameters);
+					try {
+					orList = policyEvaluator.evaluateServices(orList, customParameters);
+					} catch (Exception e) {
+						logger.error("Error while trying to evaluate services for QoS!", e);
+					}
+				} else {
+					logger.debug("policy evaluator is null");
+				}
+			}
+		}
+
+		// If matchmaking is requested, we pick out 1 ServiceRegistryEntry entity from
+		// the list.
 		if (flags.get(Flag.MATCHMAKING)) {
 			final IntraCloudProviderMatchmakingParameters params = new IntraCloudProviderMatchmakingParameters(localProviders);
 			// set additional parameters here if you use a different matchmaking algorithm

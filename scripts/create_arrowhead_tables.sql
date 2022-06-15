@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS `service_definition` (
   UNIQUE KEY `service_definition` (`service_definition`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 CREATE TABLE IF NOT EXISTS `service_interface` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `interface_name` varchar(255) DEFAULT NULL,
@@ -673,6 +674,7 @@ CREATE TABLE IF NOT EXISTS `qos_inter_relay_echo_measurement_log` (
 	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 -- QoS Manager
 
 CREATE TABLE IF NOT EXISTS `qos_reservation` (
@@ -729,3 +731,38 @@ CREATE TABLE IF NOT EXISTS `plant_description` (
   `id` bigint(20) PRIMARY KEY,
   `plant_description` mediumtext NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+-- Extended QoS
+
+CREATE TABLE IF NOT EXISTS `qos_policy` (
+  `id` bigint(20) PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(2047) NOT NULL,
+  `evaluator` varchar(255) NOT NULL,
+  `parameters` varchar(2047) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY `unique_policy_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `global_default_qos_policy` (
+  `id` bigint(20) PRIMARY KEY NOT NULL,
+  `policy_id` bigint(20)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `system_default_qos_policies` (
+  `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `system_id` bigint(20) NOT NULL,
+  `policy_id` bigint(20) NOT NULL,
+  UNIQUE KEY `system_default_unique_service_id` (`system_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `reputation_rating` (
+  `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `service_id` bigint(20) NOT NULL,
+  `provider_id` bigint(20) NOT NULL,
+  `consumer_id` bigint(20) NOT NULL,
+  `rating` int(2) NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `unique_consumer_rating` (`service_id`, `provider_id`, `consumer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

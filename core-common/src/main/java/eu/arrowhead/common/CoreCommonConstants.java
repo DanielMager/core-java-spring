@@ -207,6 +207,11 @@ public class CoreCommonConstants {
 	public static final String QOS_MONITOR_PROVIDER_SECURE = "monitor_provider_secure";
 	public static final String $QOS_MONITOR_PROVIDER_SECURE_WD = "${" + QOS_MONITOR_PROVIDER_SECURE + ":" + CoreDefaults.DEFAULT_QOS_MONITOR_PROVIDER_SECURE + "}";
 
+	public static final String EXTENDED_QOS_ENABLED = "enable_extended_qos";
+	public static final String $EXTENDED_QOS_ENABLED_WD = "${" + EXTENDED_QOS_ENABLED + ":" + CoreDefaults.DEFAULT_EXTENDED_QOS_ENABLED + "}";
+	public static final String EVALUATOR_PLUGIN_DIR = "evaluator_plugin_dir";
+	public static final String $EVALUATOR_PLUGIN_DIR_WD = "${" + EVALUATOR_PLUGIN_DIR + ":" + CoreDefaults.DEFAULT_EVALUATOR_PLUGIN_DIR;
+
 	public static final String NO_GATEKEEPER_RELAY_REQUEST_HANDLER_WORKERS = "no_gatekeeper_relay_request_handler_workers";
 	public static final String $NO_GATEKEEPER_RELAY_REQUEST_HANDLER_WORKERS_WD = "${" + NO_GATEKEEPER_RELAY_REQUEST_HANDLER_WORKERS + ":" + 
 																				 CoreDefaults.DEFAULT_NO_GATEKEEPER_RELAY_REQUEST_HANDLER_WORKERS + "}";

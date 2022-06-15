@@ -14,6 +14,9 @@ GRANT ALL PRIVILEGES ON `arrowhead`.`service_definition` TO 'orchestrator'@'loca
 GRANT ALL PRIVILEGES ON `arrowhead`.`service_interface` TO 'orchestrator'@'localhost';
 GRANT ALL PRIVILEGES ON `arrowhead`.`qos_reservation` TO 'orchestrator'@'localhost';
 GRANT ALL PRIVILEGES ON `arrowhead`.`logs` TO 'orchestrator'@'localhost';
+GRANT ALL PRIVILEGES ON `arrowhead`.`qos_policy` TO 'orchestrator'@'localhost';
+GRANT ALL PRIVILEGES ON `arrowhead`.`global_default_qos_policy` TO 'orchestrator'@'localhost';
+GRANT ALL PRIVILEGES ON `arrowhead`.`system_default_qos_policies` TO 'orchestrator'@'localhost';
 
 REVOKE ALL, GRANT OPTION FROM 'orchestrator'@'%';
 
@@ -29,5 +32,8 @@ GRANT ALL PRIVILEGES ON `arrowhead`.`service_definition` TO 'orchestrator'@'%';
 GRANT ALL PRIVILEGES ON `arrowhead`.`service_interface` TO 'orchestrator'@'%';
 GRANT ALL PRIVILEGES ON `arrowhead`.`qos_reservation` TO 'orchestrator'@'%';
 GRANT ALL PRIVILEGES ON `arrowhead`.`logs` TO 'orchestrator'@'%';
+GRANT ALL PRIVILEGES ON `arrowhead`.`qos_policy` TO 'orchestrator'@'%';
+GRANT ALL PRIVILEGES ON `arrowhead`.`global_default_qos_policy` TO 'orchestrator'@'%';
+GRANT ALL PRIVILEGES ON `arrowhead`.`system_default_qos_policies` TO 'orchestrator'@'%';
 
 FLUSH PRIVILEGES;

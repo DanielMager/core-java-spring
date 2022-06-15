@@ -1,25 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-  	<parent>
-    	<groupId>eu.arrowhead</groupId>
-    	<artifactId>core</artifactId>
-    	<version>${revision}</version>
-  	</parent>
-  	
-  	<artifactId>arrowhead-orchestrator</artifactId>
-  	<packaging>jar</packaging>
-  	<name>Arrowhead Orchestrator</name>
-  	<description>Arrowhead Orchestrator core service</description>
-
-  	<dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>eu.arrowhead</groupId>
+    <artifactId>core</artifactId>
+    <version>${revision}</version>
+  </parent>
+  
+  <artifactId>arrowhead-reputationmanager</artifactId>
+  <name>Arrowhead Reputation Manager</name>
+  <description>Arrowhead Reputation Manager core system</description>
+  
+  <dependencies>
 	    <dependency>
 	      	<groupId>eu.arrowhead</groupId>
 	      	<artifactId>arrowhead-core-common</artifactId>
 	      	<version>${revision}</version>
 	    </dependency>
-  	</dependencies>
-
-  	<build>
+  </dependencies>
+  
+  <build>
 	 	<plugins>
 	   		<plugin>
 	 			<artifactId>maven-resources-plugin</artifactId>
@@ -47,7 +46,7 @@
 	          		</execution>
 	        	</executions>
 	      	</plugin>
-	      	
+				      	
 	      	<plugin>
 				<artifactId>jdeb</artifactId>
 				<groupId>org.vafer</groupId>
@@ -70,15 +69,15 @@
 		                  			<src>${project.build.directory}/${project.build.finalName}.jar</src>
 		                  			<mapper>
 		                    			<type>perm</type>
-		                    			<prefix>/usr/share/arrowhead/orchestrator</prefix>
+		                    			<prefix>/usr/share/arrowhead/reputationmanager</prefix>
 		                    			<filemode>755</filemode>
 		                  			</mapper>
 	                			</data>
 	                			
 	                			<data>
 		                  			<type>link</type>
-		                  			<linkName>/usr/share/arrowhead/orchestrator/${project.artifactId}.jar</linkName>
-		                  			<linkTarget>/usr/share/arrowhead/orchestrator/${project.build.finalName}.jar</linkTarget>
+		                  			<linkName>/usr/share/arrowhead/reputationmanager/${project.artifactId}.jar</linkName>
+		                  			<linkTarget>/usr/share/arrowhead/reputationmanager/${project.build.finalName}.jar</linkTarget>
 	                			</data>
 	                			
 	                			<data>
@@ -86,7 +85,7 @@
 	                				<src>${project.build.directory}/log4j2.xml</src>
 	                				<mapper>
 	                					<type>perm</type>
-	                					<prefix>/etc/arrowhead/systems/orchestrator</prefix>
+	                					<prefix>/etc/arrowhead/systems/reputationmanager</prefix>
 	                					<filemode>644</filemode>
 	                				</mapper>
 	                			</data>
@@ -96,20 +95,20 @@
 	                				<src>${project.build.directory}/application.properties</src>
 	                				<mapper>
 	                					<type>perm</type>
-	                					<prefix>/etc/arrowhead/systems/orchestrator</prefix>
+	                					<prefix>/etc/arrowhead/systems/reputationmanager</prefix>
 	                					<filemode>644</filemode>
 	                				</mapper>
 	                			</data>
 	                			
 	                			<data>
 	                				<type>link</type>
-	                				<linkName>/usr/share/arrowhead/orchestrator/application.properties</linkName>
-	                				<linkTarget>/etc/arrowhead/systems/orchestrator/application.properties</linkTarget>
+	                				<linkName>/usr/share/arrowhead/reputationmanager/application.properties</linkName>
+	                				<linkTarget>/etc/arrowhead/systems/reputationmanager/application.properties</linkTarget>
 	                			</data>
 	                			
 	                			<data>
 	                				<type>file</type>
-	                				<src>${project.basedir}/src/deb/arrowhead-orchestrator.service</src>
+	                				<src>${project.basedir}/src/deb/arrowhead-reputationmanager.service</src>
 	                				<mapper>
 	                					<type>perm</type>
 	                					<prefix>/etc/systemd/system</prefix>
@@ -119,7 +118,7 @@
 	                			
 	                			<data>
 	                				<type>file</type>
-	                				<src>${project.basedir}/../scripts/orchestrator_privileges.sql</src>
+	                				<src>${project.basedir}/../scripts/reputationmanager_privileges.sql</src>
 	                				<mapper>
 	                					<type>perm</type>
 	                					<prefix>/usr/share/arrowhead/conf</prefix>
@@ -130,14 +129,6 @@
           			</execution>
         		</executions>
       		</plugin>
-      		
-      		<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<layout>ZIP</layout> <!-- use PropertiesLauncher instead of JarLauncher-->
-				</configuration>
-			</plugin>
 	 	</plugins>
 	</build>
 </project>

@@ -91,3 +91,8 @@ source translator_privileges.sql
 CREATE USER IF NOT EXISTS 'plant_description_engine'@'localhost' IDENTIFIED BY 'ivJ2y9qWCpTmzr0';
 CREATE USER IF NOT EXISTS 'plant_description_engine'@'%' IDENTIFIED BY 'ivJ2y9qWCpTmzr0';
 source plant_description_engine_privileges.sql
+
+-- Reputation Manager
+CREATE USER IF NOT EXISTS 'reputationmanager'@'localhost' IDENTIFIED BY '9DpuBRYmkiZXRIU';
+CREATE USER IF NOT EXISTS 'reputationmanager'@'%' IDENTIFIED BY '9DpuBRYmkiZXRIU';
+source reputationmanager_privileges.sql

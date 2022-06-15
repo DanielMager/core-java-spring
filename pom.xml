@@ -44,6 +44,7 @@
 		<module>plantdescriptionengine</module>
 	    <module>deb-installer</module>
 	    <module>docker-all</module>
+	    <module>reputationmanager</module>
   	</modules>
   	
 	<properties>
